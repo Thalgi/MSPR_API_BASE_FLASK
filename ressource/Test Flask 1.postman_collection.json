@@ -1,0 +1,308 @@
+{
+	"info": {
+		"_postman_id": "d7bf3aef-ef73-49a7-b81e-37f6e90943ab",
+		"name": "Test Flask 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Test API Basique",
+			"item": [
+				{
+					"name": "Helloworld",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "TVNQUl9DYWZlOmVwc2kyMDIz",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "SECRET_KEY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://192.168.1.13:5000",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000"
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Is Alive",
+					"protocolProfileBehavior": {
+						"strictSSL": false
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://192.168.1.13:5000/check",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Echo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"text\" : \"JE suis un TEst\"}"
+						},
+						"url": {
+							"raw": "https://192.168.1.13:5000/echo",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"echo"
+							],
+							"query": [
+								{
+									"key": "text",
+									"value": "je suis un test ???",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Test API User",
+			"item": [
+				{
+					"name": "CreateUser",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"username\":\"Mockusername\",\r\n\"email\":\"Mock@mock.com\",\r\n\"password\":\"MockMock\"}"
+						},
+						"url": {
+							"raw": "https://192.168.1.13:5000/create_user",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"create_user"
+							],
+							"query": [
+								{
+									"key": "Content-Type",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateUser",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"username\": \"MockTAR\"\r\n    }"
+						},
+						"url": {
+							"raw": "https://192.168.1.13:5000/update_user/USER_UUID_HERE",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"update_user",
+								"USER_UUID_HERE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "https://192.168.1.13:5000/delete_user/USER_UUID_HERE",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"delete_user",
+								"USER_UUID_HERE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://192.168.1.13:5000/get_user/USER_UUID_HERE",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"get_user",
+								"USER_UUID_HERE"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUserToken",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"MockPorc@mock.com\",\r\n\"password\":\"MockMockPorc\"}"
+						},
+						"url": {
+							"raw": "https://192.168.1.13:5000/get_user_token",
+							"protocol": "https",
+							"host": [
+								"192",
+								"168",
+								"1",
+								"13"
+							],
+							"port": "5000",
+							"path": [
+								"get_user_token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "TVNQUl9DYWZlOmVwc2kyMDIz",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "SECRET_KEY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URLFLASK",
+			"value": "http://192.168.1.13:5000/"
+		}
+	]
+}

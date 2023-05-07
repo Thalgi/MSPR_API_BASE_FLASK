@@ -5,6 +5,7 @@ from flask_mail import Message, Mail
 global mail
 
 
+########### CODE NON FONCTIONNEL A RECODER
 def get_mail(app):
     mail = None
     if mail is not None:

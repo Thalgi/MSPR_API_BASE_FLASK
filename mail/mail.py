@@ -1,35 +1,60 @@
-import qrcode
+import base64
 from io import BytesIO
-from flask_mail import Message, Mail
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+import qrcode
 
-global mail
+SCOPES = [
+    "https://www.googleapis.com/auth/gmail.send"
+]
 
+def send_email_with_qrcode(service, to_email, qr_data):
+    """
+    Send an email with a QR Code image attached.
 
-def get_mail(app):
-    mail = None
-    if mail is not None:
-        return mail
-    else:
-        mail = init_mail(app)
-        return mail
+    Args:
+        service: An authorized Gmail API service instance.
+        to_email (str): The recipient's email address.
+        qr_data (str): The data to be encoded in the QR Code.
+    """
 
-
-def init_mail(app):
-    mail = Mail(app)
-    return mail
-
-
-def send_email_with_qr_code(user_email, qr_data):
     img = qrcode.make(qr_data)
     img_buffer = BytesIO()
-    img.save(img_buffer, 'PNG')
+    img.save(img_buffer, format="PNG")
     img_buffer.seek(0)
 
-    msg = Message(subject="Your QR Code",
-                  sender="natsu.974.tm@example.com",
-                  recipients=[user_email],
-                  body="Please find the QR code attached.")
+    msg = MIMEMultipart()
+    text = MIMEText('Please Scan the QR Code to connect')
+    msg.attach(text)
 
-    msg.attach(filename="qr_code.png", content_type="image/png", data=img_buffer.getvalue())
+    image = MIMEImage(img_buffer.read())
+    image.add_header('Content-Disposition', 'attachment', filename='qrcode.png')
+    msg.attach(image)
 
-    mail.send(msg)
+    msg['to'] = to_email
+    msg['subject'] = 'MSPR-Cafe QRCode Validation'
+    create_message = {'raw': base64.urlsafe_b64encode(msg.as_bytes()).decode()}
+
+    try:
+        message = (service.users().messages().send(userId="me", body=create_message).execute())
+        print(F'sent message to {message} Message Id: {message["id"]}')
+    except HttpError as error:
+        print(F'An error occurred: {error}')
+        message = None
+
+
+def init_mail_sender():
+    """
+    Authenticate the user, create a Gmail API service instance, and return the created service
+    """
+
+    flow = InstalledAppFlow.from_client_secrets_file('ressource/GoogleAuth/credentials.json', SCOPES)
+    creds = flow.run_local_server(port=0)
+    service = build('gmail', 'v1', credentials=creds)
+
+    return service
+

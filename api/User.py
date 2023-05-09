@@ -1,3 +1,4 @@
+import json
 import secrets
 import uuid
 
@@ -60,8 +61,22 @@ class CreateUser(Resource):
         parser.add_argument('password', type=str, required=True, help='Password is required and must be a string.')
         args = parser.parse_args()
 
-        new_user = User(args['username'], args['email'], args['password'])
-        users[new_user.uuid] = new_user
+
+        if args['email'].startswith('{') :
+            json_string = args['email']
+            email = json.loads(json_string)
+        else:
+            email = args['email']
+
+        new_user = User(args['username'], email, args['password'])
+        uuid_user = new_user.uuid
+        users[uuid_user] = new_user
+
+
+        print(email)
+
+        qr_data = "https://7695-2a01-cb19-d81-c600-dd62-6606-ee27-e4bb.ngrok-free.app/confirm_user/" + str(new_user.uuid)
+        send_email_with_qrcode(service, new_user.email, qr_data)
 
         return {'message': 'User created successfully', 'user': new_user.to_uuid()}, 201
 
@@ -153,7 +168,7 @@ class ValidateUser(Resource):
         user = users[user_id]
 
         to_email = str(user.email)
-        qr_data = "https://7695-2a01-cb19-d81-c600-dd62-6606-ee27-e4bb.ngrok-free.app/confirm_user" + str(user.uuid)
+        qr_data = "https://7695-2a01-cb19-d81-c600-dd62-6606-ee27-e4bb.ngrok-free.app/confirm_user/" + str(user.uuid)
         send_email_with_qrcode(service, to_email, qr_data)
 
         return {'message': 'QR code email sent successfully'}, 201
@@ -166,8 +181,23 @@ class CheckMailExist(Resource):
         args = parser.parse_args()
         email = args['email']
 
+        email_exists = any(user.email == email for user in users.values())
+
+        if email_exists:
+            return {'message': 'true'}
+        else:
+            return {'message': 'false'}
+
+
+class ConfirmUser(Resource):
+    def get(self, uuid):
+        user = None
         for u in users.values():
-            if email == u.email:
-                return {'message': 'The email exists.'}
-            else:
-                return {'message': "The email doesn't exist."}
+            if u.uuid == uuid:
+                user = u
+                break
+        if user:
+            user.validate = True
+            return {'message': 'User has been confirmed.'}
+        else:
+            return {'message': "User does not exist."}
